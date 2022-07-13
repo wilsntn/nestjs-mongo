@@ -3,6 +3,8 @@ import { ServicesService } from './services.service';
 import { ServicesController } from './services.controller';
 import { Service } from './entities/service.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Service])],
