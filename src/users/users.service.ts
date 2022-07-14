@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
-import { v4 as uuid } from 'uuid';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
-
+import { ObjectID as ObjectIDType } from 'typeorm';
+import { ObjectId } from 'bson';
 const saltRounds = 10;
 
 @Injectable()
@@ -18,7 +18,6 @@ export class UsersService {
     const hashPass = await bcrypt.hash(password, saltRounds);
 
     const user = this.userRepository.create({
-      id: uuid(),
       name,
       email,
       password: hashPass,
@@ -33,12 +32,8 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  findOne(id: string) {
-    return this.userRepository.findOne({
-      where: {
-        id: id,
-      },
-    });
+  async findOne(id: string) {
+    return await this.userRepository.findOne({ _id: new ObjectId(id) } as any);
   }
 
   findByEmail(email: string) {
@@ -50,6 +45,6 @@ export class UsersService {
   }
 
   remove(id: string) {
-    return this.userRepository.delete({ id: id });
+    return this.userRepository.delete({ _id: new ObjectId(id) } as any);
   }
 }

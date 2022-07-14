@@ -1,12 +1,17 @@
-import { Entity, PrimaryColumn, Column, ObjectIdColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ObjectIdColumn,
+  OneToMany,
+  ObjectID as ObjectIDType,
+} from 'typeorm';
+import { Order } from 'src/orders/entities/order.entity';
+import { ObjectId } from 'bson';
 
 @Entity()
 export class User {
   @ObjectIdColumn()
-  _id: string;
-
-  @PrimaryColumn()
-  id: string;
+  id: ObjectId;
 
   @Column()
   name: string;
@@ -25,4 +30,7 @@ export class User {
 
   @Column()
   balance: 0;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders: Order[];
 }

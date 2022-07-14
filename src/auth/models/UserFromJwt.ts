@@ -1,5 +1,6 @@
+import { ObjectId } from 'bson';
 export interface UserFromJwt {
-  id: string;
+  id: ObjectId;
   email: string;
   name: string;
 }

@@ -1,5 +1,6 @@
+import { ObjectId } from 'bson';
 export interface UserPayload {
-  sub: string;
+  sub: ObjectId;
   email: string;
   name: string;
   isAdmin: boolean;
