@@ -6,11 +6,12 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
+import { ObjectId } from 'bson';
 
 @Entity()
 export class Order {
   @ObjectIdColumn()
-  _id: string;
+  id: ObjectId;
 
   @Column()
   details: string;

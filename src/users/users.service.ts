@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
-import { ObjectID as ObjectIDType } from 'typeorm';
 import { ObjectId } from 'bson';
 const saltRounds = 10;
 
@@ -45,6 +44,6 @@ export class UsersService {
   }
 
   remove(id: string) {
-    return this.userRepository.delete({ _id: new ObjectId(id) } as any);
+    return this.userRepository.delete(id);
   }
 }

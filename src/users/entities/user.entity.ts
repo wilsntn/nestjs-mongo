@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  ObjectIdColumn,
-  OneToMany,
-  ObjectID as ObjectIDType,
-} from 'typeorm';
+import { Entity, Column, ObjectIdColumn, OneToMany } from 'typeorm';
 import { Order } from 'src/orders/entities/order.entity';
 import { ObjectId } from 'bson';
 

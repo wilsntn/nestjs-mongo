@@ -1,9 +1,9 @@
 import { Injectable, ExecutionContext } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
+import { ObjectId } from 'bson';
 
 @Injectable()
 export class OrdersService {
@@ -23,15 +23,21 @@ export class OrdersService {
     return await this.orderRepository.save(order);
   }
 
-  findAll() {
-    return this.orderRepository.find({ relations: ['user'] });
+  findAll(req: any) {
+    const user = req.user.id;
+    return this.orderRepository.find({
+      where: { user: user },
+      relations: { user: true },
+    });
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} order`;
+    return this.orderRepository.findOne({
+      _id: new ObjectId(id),
+    } as any);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} order`;
+    return this.orderRepository.delete(id);
   }
 }
