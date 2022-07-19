@@ -5,24 +5,47 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { ObjectId } from 'bson';
+import { ConfigService } from '@nestjs/config';
+import * as sendgrid from '@sendgrid/mail';
+import { JwtService } from '@nestjs/jwt';
+
 const saltRounds = 10;
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
   async createUser(createUserDto: CreateUserDto) {
     const { name, email, password } = createUserDto;
     const hashPass = await bcrypt.hash(password, saltRounds);
 
-    const user = this.userRepository.create({
+    const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+    const msg = {
+      to: `${email}`,
+      from: 'noreply@myclubads.com',
+      subject: 'Verificacao de E-mail Myclubsocial',
+      text: 'Validação de E-mail',
+      html: `Clique no link para ativar a sua conta! <a href="http://localhost:3100/ativar/${randomNumber}" target="_blank" rel="noopener noreferrer">Aqui!</a>`,
+    };
+    sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
+    sendgrid
+      .send(msg)
+      .then(() => {
+        console.log('email enviado');
+      })
+      .catch((err) => console.log(err));
+    const user: User = this.userRepository.create({
       name,
       email,
       password: hashPass,
       isAdmin: false,
       isActive: false,
       balance: 0,
+      activationNumber: randomNumber,
     });
     return this.userRepository.save(user);
   }
@@ -39,6 +62,14 @@ export class UsersService {
     return this.userRepository.findOne({
       where: {
         email: email,
+      },
+    });
+  }
+
+  activateEmail(id: number) {
+    return this.userRepository.findOne({
+      where: {
+        activationNumber: id,
       },
     });
   }

@@ -4,9 +4,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from './users.controller';
 import { User } from './entities/user.entity';
 import { Order } from 'src/orders/entities/order.entity';
-
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Order])],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forFeature([User, Order]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '7d' },
+    }),
+  ],
   controllers: [UsersController],
   providers: [UsersService],
   exports: [UsersService],

@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
-import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+// import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('services')
 export class ServicesController {
@@ -11,7 +11,6 @@ export class ServicesController {
   createService(@Body() createServiceDto: CreateServiceDto) {
     return this.servicesService.createService(createServiceDto);
   }
-  @IsPublic()
   @Get()
   findAll() {
     return this.servicesService.findAll();

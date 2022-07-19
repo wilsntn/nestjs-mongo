@@ -25,6 +25,9 @@ export class User {
   @Column()
   balance: 0;
 
+  @Column()
+  activationNumber: number;
+
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
 }
