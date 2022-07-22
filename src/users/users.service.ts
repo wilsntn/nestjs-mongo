@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
@@ -8,7 +8,6 @@ import { ObjectId } from 'bson';
 import { ConfigService } from '@nestjs/config';
 import * as sendgrid from '@sendgrid/mail';
 import { JwtService } from '@nestjs/jwt';
-import { throwError } from 'rxjs';
 
 const saltRounds = 10;
 
