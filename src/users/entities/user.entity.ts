@@ -26,7 +26,7 @@ export class User {
   balance: 0;
 
   @Column()
-  activationNumber: number;
+  activationCode: string;
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { ObjectId } from 'bson';
 import { ConfigService } from '@nestjs/config';
 import * as sendgrid from '@sendgrid/mail';
 import { JwtService } from '@nestjs/jwt';
+import { throwError } from 'rxjs';
 
 const saltRounds = 10;
 
@@ -23,6 +24,8 @@ export class UsersService {
     const hashPass = await bcrypt.hash(password, saltRounds);
 
     const randomNumber = Math.floor(100000 + Math.random() * 900000);
+
+    const code = randomNumber.toString();
 
     const msg = {
       to: `${email}`,
@@ -45,7 +48,7 @@ export class UsersService {
       isAdmin: false,
       isActive: false,
       balance: 0,
-      activationNumber: randomNumber,
+      activationCode: code,
     });
     return this.userRepository.save(user);
   }
@@ -66,10 +69,23 @@ export class UsersService {
     });
   }
 
-  activateEmail(id: number) {
-    return this.userRepository.findOne({
+  async activateEmail(cod: string) {
+    await this.userRepository
+      .findOneOrFail({
+        where: {
+          activationCode: cod,
+        },
+      })
+      .then((userfound) => {
+        userfound.isActive = true;
+        return this.userRepository.save(userfound);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return await this.userRepository.findOneOrFail({
       where: {
-        activationNumber: id,
+        activationCode: cod,
       },
     });
   }

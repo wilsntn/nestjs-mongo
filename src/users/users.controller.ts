@@ -37,9 +37,9 @@ export class UsersController {
   }
 
   @IsPublic()
-  @Get('/ativar/:id')
-  activate(@Param('id') id: number) {
-    return this.usersService.activateEmail(id);
+  @Get('/ativar/:cod')
+  activate(@Param('cod') cod: string) {
+    return this.usersService.activateEmail(cod);
   }
 
   @Delete(':id')
