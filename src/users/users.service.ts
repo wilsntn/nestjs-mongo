@@ -69,24 +69,17 @@ export class UsersService {
   }
 
   async activateEmail(cod: string) {
-    await this.userRepository
-      .findOneOrFail({
-        where: {
-          activationCode: cod,
-        },
-      })
-      .then((userfound) => {
-        userfound.isActive = true;
-        return this.userRepository.save(userfound);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    return await this.userRepository.findOneOrFail({
+    const user = await this.userRepository.findOneOrFail({
       where: {
         activationCode: cod,
       },
     });
+    if (user && user.isActive == false) {
+      user.isActive = true;
+      return this.userRepository.save(user);
+    } else {
+      return user;
+    }
   }
 
   remove(id: string) {
