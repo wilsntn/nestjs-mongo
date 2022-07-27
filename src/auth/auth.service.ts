@@ -25,7 +25,12 @@ export class AuthService {
 
     return {
       acess_token: jwtToken,
-      user: { name: user.name, email: user.email, id: user.id },
+      user: {
+        name: user.name,
+        email: user.email,
+        id: user.id,
+        isActive: user.isActive,
+      },
     };
   }
 
